@@ -1,0 +1,9 @@
+tx_id,sale_timestamp,customer_contact,items_sold,store_metadata
+TX-1001,08/01/2026 07:15,Alice.Smith@Example.com,1x DRNK-001|2x FOOD-001,"{""store_id"": ""S-1"", ""city"": ""Seattle"", ""region"": ""WA""}"
+TX-1002,2026-08-01 08:22:00,b.jones@example.com,1x drnk-002,"{""store_id"": ""S-2"", ""city"": ""Portland"", ""region"": ""OR""}"
+TX-1003,08/01/2026 08:45,,1x DRNK-003,"{""store_id"": ""S-1"", ""city"": ""Seattle"", ""region"": ""WA""}"
+TX-1004,2026-08-02 09:10:00,d.wilson@example.com,1x MERCH-001|1x drnk-002,"{""store_id"": ""S-1"", ""city"": ""Seattle"", ""region"": ""WA""}"
+TX-1005,2026-08-02 10:05:00,e.brown@example.com,-1x FOOD-002,"{""store_id"": ""S-2"", ""city"": ""Portland"", ""region"": ""OR""}"
+TX-1006,08/03/2026 07:30,alice.smith@example.com,1x DRNK-001,"{""store_id"": ""S-1"", ""city"": ""seattle"", ""region"": ""WA""}"
+TX-1007,2026-08-03 11:15:00,c.davis@example.com,2x DRNK-003,"{""store_id"": ""S-3"", ""city"": ""Vancouver"", ""region"": ""BC""}"
+TX-1008,2026-08-04 08:00:00,INVALID_EMAIL,1x FOOD-001|1x DRNK-002,"{""store_id"": ""S-1"", ""city"": ""Seattle"", ""region"": ""WA""}"

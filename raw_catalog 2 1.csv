@@ -1,0 +1,8 @@
+item_code,description,unit_price
+DRNK-001,Beverage - Espresso,$3.50
+drnk-002,Beverage - Latte,$4.75
+DRNK-003,Beverage - Cold Brew,4.50
+FOOD-001,Food - Croissant,$3.00 
+FOOD-002,Food - Blueberry Muffin,3.50
+MERCH-001,Merch | Ceramic Mug,$12.00
+UNKNOWN_ITEM,Mystery Box,0.00

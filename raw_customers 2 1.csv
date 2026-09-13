@@ -1,0 +1,7 @@
+cust_email,full_name,tier,updated_at
+Alice.Smith@Example.com,Smith, Alice,Gold,2026-01-01
+b.jones@example.com,Bob Jones,silver,2026-02-15
+c.davis@example.com,Charlie Davis,NONE,2026-03-10
+alice.smith@example.com,Alice S.,Gold,2026-08-01
+null,Guest User,,2026-04-01
+d.wilson@example.com,wilson diana,GOLD,2026-05-20
