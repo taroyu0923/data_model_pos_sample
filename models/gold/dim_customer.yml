@@ -1,0 +1,29 @@
+version: 2
+
+models:
+  - name: dim_customer
+    description: "Customer dimension. Grain: one row per customer_id. customer_type: member (latest loyalty record), inferred (valid POS email not in loyalty list; updated_at = first purchase), guest (__guest__, blank contact), unknown (__unknown__, invalid contact)."
+    columns:
+      - name: customer_id
+        description: "Lower-case email, or __guest__ / __unknown__. Primary key."
+        data_tests: [unique, not_null]
+      - name: cust_email
+        description: "Lower-case email; NULL for guest and unknown."
+      - name: full_name
+        description: "Title Case name; 'Unknown' for inferred, 'Guest' / 'Unknown' for sentinels."
+        data_tests: [not_null]
+      - name: tier
+        description: "Gold, Silver or None."
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["Gold", "Silver", "None"]
+      - name: updated_at
+        description: "Latest record time (member) or first purchase (inferred); NULL for sentinels."
+      - name: customer_type
+        description: "member, inferred, guest or unknown."
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["member", "inferred", "guest", "unknown"]
