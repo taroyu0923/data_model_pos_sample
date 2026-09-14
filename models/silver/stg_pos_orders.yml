@@ -1,0 +1,27 @@
+version: 2
+
+models:
+  - name: stg_pos_orders
+    description: "Transaction headers. Grain: one row per tx_id. sale_timestamp parsed from 'MM/DD/YYYY HH:MM' or 'YYYY-MM-DD HH:MM:SS' (store-local, no time zone). Store attributes extracted from store_metadata JSON."
+    columns:
+      - name: tx_id
+        description: "Transaction id. Primary key."
+        data_tests: [unique, not_null]
+      - name: sale_timestamp
+        description: "Sale time; NULL would mean an unknown date format."
+        data_tests: [not_null]
+      - name: customer_contact
+        description: "Lower-case contact as given; NULL when blank."
+      - name: contact_type
+        description: "email (valid address), invalid (not an address) or guest (blank)."
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["email", "invalid", "guest"]
+      - name: store_id
+        description: "Store id from store_metadata JSON."
+        data_tests: [not_null]
+      - name: city
+        description: "Title Case city."
+      - name: region
+        description: "Upper-case region code."
