@@ -15,18 +15,21 @@ Status: **Draft for review** (2026-09-14). Nothing below is built yet.
 ## 2. Stack and repository
 
 - **Database:** DuckDB file `daily_grind.duckdb` (git-ignored).
-- **Python:** Anaconda Python 3.10.9 (`C:\Users\Albert Liu\anaconda3\python.exe`) → project venv `.venv` with `dbt-duckdb` (versions pinned in `requirements.txt` after install).
+- **Python:** Anaconda Python 3.10.9 → project venv `.venv`; pinned in `requirements.txt`: dbt-core 1.12.4, dbt-duckdb 1.11.0, duckdb 1.5.5, pytest 9.1.1.
 - **Repo:** `github.com/taroyu0923/data_model_pos_sample`. Work on feature branches off `main`; Albert merges.
 - **Line endings:** `.gitattributes` marks `*.csv -text` so `core.autocrlf=true` never rewrites raw bytes.
 
 ```
 raw/                     original vendor CSVs, never edited
 scripts/preprocess.py    file-structure repair only  -> seeds/
-seeds/                   repaired CSVs (dbt seeds, all columns loaded as varchar)
+scripts/export_gold.py   gold tables -> exports/*.parquet (Power BI)
+seeds/                   generated, git-ignored (all columns loaded as varchar)
 models/bronze/           brz_* views: seeds as-is, no casting
-models/silver/           stg_* : cleaning, casting, dedup, JSON parse, item split
-models/gold/             dim_* and fct_* star schema
+models/silver/           stg_* views: cleaning, casting, dedup, JSON parse, item split
+models/gold/             dim_* and fct_* tables (star schema)
 tests/                   singular dbt tests (reconciliation, business rules)
+tests_py/                pytest for the Python scripts
+.github/workflows/       CI: pre-process, pytest, dbt build, export
 docs/                    project_plan.md, erd.md, rollout.md, ai_usage.md
 CLAUDE.md                harness rules for all models
 ```
@@ -72,7 +75,7 @@ CLAUDE.md                harness rules for all models
 | pos | Store data in JSON, `seattle` casing | Silver | `json_extract_string`; Title Case city, upper region |
 | pos | Multi-item delimited string, `-1x` returns, lower-case codes | Silver | split on `\|`, regex `^(-?\d+)x\s+(.+)$`, unnest to line grain |
 | pos | Empty / invalid / unknown contact | Gold | Guest / Unknown / inferred rows in `dim_customer` |
-| pos | Item code not in catalog (none today) | Gold | Map to `UNKNOWN_ITEM`, keep original code in `source_item_code`; test warns |
+| pos | Item code not in catalog (none today) | Gold | Map to `UNKNOWN_ITEM`; original code stays visible in `stg_pos_order_items`; `assert_pos_items_exist_in_catalog` warns |
 
 ## 5. Conceptual model
 
