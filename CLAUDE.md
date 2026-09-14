@@ -34,6 +34,9 @@ Plan and all confirmed decisions: `docs/project_plan.md`. Do not change a confir
 - One focused change per commit. PR description: Why, How (lineage, grain), Tests (exact command + pass/warn/error counts), Known differences.
 - Never mark a test as done unless it ran in this session.
 
+## File naming
+- Never put a date or time in a file name (e.g. `task1-blueprint.md`, not `2026-09-14-task1-blueprint.md`). This overrides any skill default.
+
 ## Commands
 - Activate venv: `.venv\Scripts\Activate.ps1`
 - Pre-process: `python scripts/preprocess.py`
