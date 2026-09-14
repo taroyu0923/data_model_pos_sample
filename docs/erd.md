@@ -78,7 +78,7 @@ erDiagram
     dim_date ||--o{ fct_order_items : "date_day"
 
     dim_customer {
-        VARCHAR customer_id PK "lower-case email or __guest__ / __unknown__"
+        VARCHAR customer_id PK "lower-case email; sentinels: guest, unknown (see plan)"
         VARCHAR cust_email "null for guest / unknown"
         VARCHAR full_name "Title Case"
         VARCHAR tier "Gold, Silver, None"
