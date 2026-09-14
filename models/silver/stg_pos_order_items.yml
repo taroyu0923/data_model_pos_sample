@@ -1,0 +1,23 @@
+version: 2
+
+models:
+  - name: stg_pos_order_items
+    description: "Line items. Grain: one row per (tx_id, item_code). items_sold split on '|', each '<qty>x <code>' parsed; repeated codes in one transaction are summed. quantity is signed (-1 = return)."
+    data_tests:
+      - unique:
+          column_name: "tx_id || '|' || item_code"
+    columns:
+      - name: tx_id
+        description: "Transaction id."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_pos_orders')
+                field: tx_id
+      - name: item_code
+        description: "Upper-case code as sold; NULL would mean an unparseable token."
+        data_tests: [not_null]
+      - name: quantity
+        description: "Signed quantity; NULL would mean an unparseable token."
+        data_tests: [not_null]

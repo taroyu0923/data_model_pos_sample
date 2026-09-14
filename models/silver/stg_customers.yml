@@ -1,0 +1,21 @@
+version: 2
+
+models:
+  - name: stg_customers
+    description: "Cleaned loyalty records with history. Grain: one row per source record. Email lower-cased ('null'/blank -> NULL); names Title Case with 'Last, First' swapped; tier Title Case with NONE/blank -> None. is_latest = newest updated_at per email (tie-break full_name, then tier)."
+    columns:
+      - name: cust_email
+        description: "Lower-case email; NULL when missing or the literal 'null'."
+      - name: full_name
+        description: "Title Case name."
+      - name: tier
+        description: "Gold, Silver or None."
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["Gold", "Silver", "None"]
+      - name: updated_at
+        description: "Record timestamp."
+        data_tests: [not_null]
+      - name: is_latest
+        description: "True for exactly one record per non-null email."

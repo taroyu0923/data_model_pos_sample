@@ -1,0 +1,36 @@
+version: 2
+
+models:
+  - name: fct_orders
+    description: "Order fact. Grain: one row per tx_id. Aggregated from fct_order_items. is_return_order = every line is a return (excluded from order count and AOV)."
+    columns:
+      - name: tx_id
+        description: "Primary key."
+        data_tests: [unique, not_null]
+      - name: date_day
+        description: "Sale date, FK to dim_date."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: date_day
+      - name: customer_id
+        description: "FK to dim_customer."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_customer')
+                field: customer_id
+      - name: store_id
+        description: "FK to dim_store."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_store')
+                field: store_id
+      - name: order_revenue
+        description: "Signed sum of line_revenue, USD."
+        data_tests: [not_null]

@@ -1,0 +1,9 @@
+version: 2
+
+models:
+  - name: brz_catalog
+    description: "Bronze product catalog. Grain: one row per catalog line as delivered. No cleaning; all columns varchar."
+  - name: brz_customers
+    description: "Bronze loyalty customers. Grain: one row per source record (duplicates kept). No cleaning; all columns varchar."
+  - name: brz_pos_system
+    description: "Bronze POS transaction log. Grain: one row per transaction; items_sold and store_metadata still nested. All columns varchar."

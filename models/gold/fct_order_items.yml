@@ -1,0 +1,58 @@
+version: 2
+
+models:
+  - name: fct_order_items
+    description: "Order line fact. Grain: one row per (tx_id, item_code). quantity signed (-1 = return); line_revenue = quantity x unit_price; order_fraction = 1 / lines in the transaction."
+    data_tests:
+      - unique:
+          column_name: "tx_id || '|' || item_code"
+    columns:
+      - name: tx_id
+        description: "FK to fct_orders."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('fct_orders')
+                field: tx_id
+      - name: item_code
+        description: "FK to dim_item; codes missing from the catalog map to UNKNOWN_ITEM."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_item')
+                field: item_code
+      - name: date_day
+        description: "FK to dim_date."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: date_day
+      - name: customer_id
+        description: "FK to dim_customer."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_customer')
+                field: customer_id
+      - name: store_id
+        description: "FK to dim_store."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_store')
+                field: store_id
+      - name: quantity
+        description: "Signed quantity; -1 = one unit returned."
+        data_tests: [not_null]
+      - name: unit_price
+        description: "Catalog price, USD."
+        data_tests: [not_null]
+      - name: line_revenue
+        description: "quantity x unit_price, USD."
+        data_tests: [not_null]

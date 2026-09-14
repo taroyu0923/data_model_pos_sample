@@ -2,3 +2,13 @@
 target/
 *.svg
 .superpowers/
+.venv/
+*.duckdb
+*.duckdb.wal
+logs/
+dbt_packages/
+seeds/*.csv
+exports/
+__pycache__/
+.pytest_cache/
+.user.yml

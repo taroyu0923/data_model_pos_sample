@@ -1,0 +1,15 @@
+version: 2
+
+models:
+  - name: dim_store
+    description: "Store dimension. Grain: one row per store_id. A store with conflicting city/region fails the unique test."
+    columns:
+      - name: store_id
+        description: "Primary key."
+        data_tests: [unique, not_null]
+      - name: city
+        description: "Title Case city."
+        data_tests: [not_null]
+      - name: region
+        description: "Upper-case region code."
+        data_tests: [not_null]

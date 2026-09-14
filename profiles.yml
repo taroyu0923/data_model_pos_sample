@@ -1,0 +1,7 @@
+daily_grind:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: daily_grind.duckdb
+      threads: 4

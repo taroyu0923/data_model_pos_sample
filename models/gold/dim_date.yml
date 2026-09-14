@@ -1,0 +1,9 @@
+version: 2
+
+models:
+  - name: dim_date
+    description: "Calendar dimension. Grain: one row per day from first to last sale date. week_start_date is Monday; day_of_week is ISO (1 = Monday)."
+    columns:
+      - name: date_day
+        description: "Primary key."
+        data_tests: [unique, not_null]

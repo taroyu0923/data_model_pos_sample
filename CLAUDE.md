@@ -40,4 +40,6 @@ Plan and all confirmed decisions: `docs/project_plan.md`. Do not change a confir
 ## Commands
 - Activate venv: `.venv\Scripts\Activate.ps1`
 - Pre-process: `python scripts/preprocess.py`
-- Build: `dbt build --profiles-dir .`
+- Python tests: `python -m pytest tests_py -q`
+- Build + test: `dbt build --profiles-dir .`
+- Export for Power BI: `python scripts/export_gold.py`

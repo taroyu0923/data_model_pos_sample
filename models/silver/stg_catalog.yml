@@ -1,0 +1,18 @@
+version: 2
+
+models:
+  - name: stg_catalog
+    description: "Cleaned catalog. Grain: one row per item_code. Codes upper-cased; '$' and spaces stripped from price; description split on ' - ' or ' | ' (no separator -> category 'Unknown')."
+    columns:
+      - name: item_code
+        description: "Upper-case, trimmed item code. Primary key."
+        data_tests: [unique, not_null]
+      - name: item_category
+        description: "Text before the separator, e.g. Beverage."
+        data_tests: [not_null]
+      - name: item_category_sub
+        description: "Text after the separator, e.g. Latte."
+        data_tests: [not_null]
+      - name: unit_price
+        description: "Price in USD, DECIMAL(10,2). NULL would mean an unparseable price."
+        data_tests: [not_null]
