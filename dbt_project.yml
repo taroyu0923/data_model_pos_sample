@@ -1,0 +1,31 @@
+name: daily_grind
+version: "1.0.0"
+profile: daily_grind
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+clean-targets: ["target", "dbt_packages"]
+
+seeds:
+  daily_grind:
+    +schema: raw
+    raw_catalog:
+      +column_types: {item_code: varchar, description: varchar, unit_price: varchar}
+    raw_customers:
+      +column_types: {cust_email: varchar, full_name: varchar, tier: varchar, updated_at: varchar}
+    raw_pos_system:
+      +column_types: {tx_id: varchar, sale_timestamp: varchar, customer_contact: varchar, items_sold: varchar, store_metadata: varchar}
+
+models:
+  daily_grind:
+    bronze:
+      +schema: bronze
+      +materialized: view
+    silver:
+      +schema: silver
+      +materialized: view
+    gold:
+      +schema: gold
+      +materialized: table
