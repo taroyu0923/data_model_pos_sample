@@ -167,13 +167,14 @@ Headline KPI definitions (for Task 3):
 ## 8. Testing and validation (from `validate-dbt-report-migration`, adapted)
 
 - **Generic tests:** `unique` + `not_null` on every PK; `relationships` on every FK; `accepted_values` on tier, customer_type.
-- **Singular reconciliation tests:**
+- **Singular tests:**
   - Σ raw item quantities (parsed from Bronze) = Σ `fct_order_items.quantity`
   - count distinct raw `tx_id` = rows in `fct_orders`
-  - `fct_orders.order_revenue` = Σ its lines
+  - net revenue recomputed from Silver = Σ `fct_orders.order_revenue`
   - Σ `order_fraction` per tx = 1
-  - every raw timestamp parses (no null `sale_timestamp`)
-  - one `dim_customer` row per lower-case email
+  - every non-null Silver email is exactly one member in `dim_customer` with the newest `updated_at`
+  - warn: POS code missing from catalog; catalog description without separator; same item sold and returned in one tx
+(every raw timestamp parsing remains covered by the `not_null` test on `stg_pos_orders.sale_timestamp`.)
 - **preprocess.py:** pytest checking the repaired customers file parses to exactly 4 columns on every row.
 - **Evidence:** exact `dbt build` command and pass/warn/error counts recorded in the PR description.
 
@@ -212,3 +213,4 @@ Branches: `docs/project-plan` (this), `feat/task1-erd`, `feat/task2-pipeline`, `
 - `is_return_order` is true only when all lines are returns; a mixed order counts as a normal order with reduced revenue.
 - Sale timestamps have no time zone; all three stores are in Pacific time, so no conversion is applied.
 - Only 8 transactions over 4 days — trends in the dashboard are illustrative.
+- A sale and a return of the same item in one transaction net into one line (decision C), hiding that return from Units Returned; a warn test flags it (review finding, option a chosen).

@@ -61,7 +61,7 @@ stg_pos_order_items + stg_pos_orders + dim_item -> gold.fct_order_items -> gold.
 | Dates `08/01/2026 07:15` and `2026-08-01 08:22:00` | Parsed as `MM/DD/YYYY HH:MM` or ISO → `TIMESTAMP`. Unparseable → build fails. |
 | Store data in JSON, `seattle` | Extracted; city Title Case, region upper-case. |
 | `1x DRNK-001\|2x FOOD-001`, `-1x FOOD-002` | One row per item per transaction; signed quantity, `is_return` flag; repeated codes summed. |
-| POS code not in catalog | Mapped to `UNKNOWN_ITEM`; `assert_pos_items_exist_in_catalog` warns. |
+| POS code not in catalog | Mapped to `UNKNOWN_ITEM` (always present in `dim_item`); `assert_pos_items_exist_in_catalog` warns. |
 | Blank contact / `INVALID_EMAIL` / email not in loyalty list | `__guest__` / `__unknown__` / inferred customer (name `Unknown`, first purchase as `updated_at`). |
 
 ## Headline numbers (current raw files)
@@ -72,8 +72,14 @@ stg_pos_order_items + stg_pos_orders + dim_item -> gold.fct_order_items -> gold.
 | Orders | count of `fct_orders` where not `is_return_order` | 7 |
 | Average order value | revenue of non-return orders ÷ orders | 7.96 |
 
+## Known limitations
+
+- A sale and a return of the same item in one transaction are netted into one line (one row per item per transaction), so that return is not counted in Units Returned. `assert_no_same_item_sale_and_return_in_order` warns when it happens.
+- Catalog prices are current-only; past sales are valued at today's catalog price.
+- Timestamps carry no time zone; all stores are treated as local time.
+
 ## Tests
 
 - Generic: `unique` + `not_null` on every key, `relationships` on every foreign key, `accepted_values` on tier, contact type and customer type.
-- Singular (`tests/`): quantity and order count reconcile Gold to Bronze; order revenue equals its lines; `order_fraction` sums to 1 per order; one latest record per email; POS codes exist in catalog (warn).
+- Singular (`tests/`): quantity and order count reconcile Gold to Bronze; net revenue reconciles Gold to Silver; `order_fraction` sums to 1 per order; member customers match the newest Silver record per email. Warnings: POS codes missing from the catalog, catalog descriptions that do not split, a sale and a return of the same item in one order.
 - Python (`tests_py/`): pre-processing repairs and export types.

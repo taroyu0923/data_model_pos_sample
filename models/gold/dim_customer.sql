@@ -14,16 +14,16 @@ with members as (
 
 inferred as (
     select
-        customer_contact as customer_id,
-        customer_contact as cust_email,
+        o.customer_contact as customer_id,
+        o.customer_contact as cust_email,
         'Unknown' as full_name,
         'None' as tier,
-        min(sale_timestamp) as updated_at,
+        min(o.sale_timestamp) as updated_at,
         'inferred' as customer_type
-    from {{ ref('stg_pos_orders') }}
-    where contact_type = 'email'
-        and customer_contact not in (select customer_id from members)
-    group by customer_contact
+    from {{ ref('stg_pos_orders') }} as o
+    where o.contact_type = 'email'
+        and not exists (select 1 from members as m where m.customer_id = o.customer_contact)
+    group by o.customer_contact
 ),
 
 sentinels as (

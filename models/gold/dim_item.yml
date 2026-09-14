@@ -2,7 +2,7 @@ version: 2
 
 models:
   - name: dim_item
-    description: "Product dimension. Grain: one row per item_code."
+    description: "Product dimension. Grain: one row per item_code. Always includes UNKNOWN_ITEM (price 0.00), added if the catalog does not supply it."
     columns:
       - name: item_code
         description: "Primary key."

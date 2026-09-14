@@ -28,6 +28,6 @@ select
     tier,
     updated_at,
     cust_email is not null
-        and row_number() over (partition by cust_email order by updated_at desc nulls last, full_name) = 1
+        and row_number() over (partition by cust_email order by updated_at desc nulls last, full_name, tier) = 1
         as is_latest
 from cleaned

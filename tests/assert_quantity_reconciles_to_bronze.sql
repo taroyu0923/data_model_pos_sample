@@ -1,7 +1,7 @@
 -- Total signed quantity parsed straight from the raw items_sold strings must equal the line fact.
 with bronze as (
     select sum(list_sum(list_transform(
-        regexp_extract_all(items_sold, '(-?\d+)\s*x\s', 1), lambda q: cast(q as integer)
+        regexp_extract_all(items_sold, '(-?\d+)\s*[xX]\s', 1), lambda q: cast(q as integer)
     ))) as qty
     from {{ ref('brz_pos_system') }}
 ),

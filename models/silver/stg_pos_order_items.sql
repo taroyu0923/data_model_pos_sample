@@ -9,8 +9,8 @@ with tokens as (
 parsed as (
     select
         tx_id,
-        try_cast(regexp_extract(item_token, '^(-?\d+)\s*x\s+(\S+)$', 1) as integer) as quantity,
-        upper(regexp_extract(item_token, '^(-?\d+)\s*x\s+(\S+)$', 2)) as item_code
+        try_cast(regexp_extract(item_token, '^(-?\d+)\s*[xX]\s+(\S+)$', 1) as integer) as quantity,
+        upper(regexp_extract(item_token, '^(-?\d+)\s*[xX]\s+(\S+)$', 2)) as item_code
     from tokens
 )
 

@@ -26,6 +26,7 @@ models:
       - name: date_day
         description: "FK to dim_date."
         data_tests:
+          - not_null
           - relationships:
               arguments:
                 to: ref('dim_date')
