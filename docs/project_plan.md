@@ -1,6 +1,6 @@
 # Project Plan — The Daily Grind POS Analytics Pipeline
 
-Status: **Draft for review** (2026-09-14). Nothing below is built yet.
+Status: Tasks 1–3 built (Task 1 merged; Tasks 2–3 in review). Task 4 roll-out and the AI usage note are not written yet.
 
 ## 1. Goal and deliverables
 
@@ -8,7 +8,7 @@ Status: **Draft for review** (2026-09-14). Nothing below is built yet.
 |---|---|---|
 | 1. Blueprint | Conceptual/logical model + physical star schema as Mermaid ER (`docs/erd.md`) with PKs, FKs, data types | Claude (reviewed by Albert) |
 | 2. Pipeline | dbt project on DuckDB, Bronze / Silver / Gold layers, tests, docs — pushed to GitHub | Claude (reviewed by Albert) |
-| 3. Dashboard | One-page Store Manager dashboard in Power BI on the Gold tables | Albert (Claude supplies KPI definitions / DAX list) |
+| 3. Dashboard | Multi-page (5 pages) Store Manager dashboard in Power BI on the Gold tables (`UPM Case Assignment_Report.pbix`) + user guide `docs/dashboard_guide.md` | Albert (Claude supplies KPI definitions / DAX list / user guide) |
 | 4. Roll-out | Change-management strategy (1–2 paragraphs or slides) | Claude draft, Albert edits |
 | AI usage note | How AI was prompted and how it helped (required by the brief) | Claude draft, Albert edits |
 
@@ -30,7 +30,8 @@ models/gold/             dim_* and fct_* tables (star schema)
 tests/                   singular dbt tests (reconciliation, business rules)
 tests_py/                pytest for the Python scripts
 .github/workflows/       CI: pre-process, pytest, dbt build, export
-docs/                    project_plan.md, erd.md, rollout.md, ai_usage.md
+docs/                    project_plan.md, erd.md, dashboard_guide.md; planned: rollout.md, ai_usage.md
+UPM Case Assignment_Report.pbix   Power BI dashboard (Task 3)
 CLAUDE.md                harness rules for all models
 ```
 
@@ -57,6 +58,9 @@ CLAUDE.md                harness rules for all models
 | G | Pre-processing | Python fixes **file structure only** (quote broken field, CRLF→LF, final newline). All value cleaning in dbt Silver. |
 | 11 | Diagram | Mermaid ER. |
 | 12 | Database | DuckDB. |
+| 13 | Dashboard layout | Several pages (Overview, Category & Items, Stores, Daily, Customers) instead of one page; audience Store Manager. |
+| 14 | Orders by category | Fractional orders (Σ `order_fraction`, return-only orders excluded), not distinct orders. |
+| 15 | Daily trend on 4 days of data | Kept as a demo; labelled illustrative. |
 
 ## 4. Data quality issues and where each is fixed
 
@@ -153,7 +157,7 @@ Headline KPI definitions (for Task 3):
 - Orders = count of `tx_id` where `is_return_order = false`
 - AOV = Σ `order_revenue` (non-return orders) ÷ Orders
 - Units Sold = Σ `quantity` where `is_return = false`; Units Returned = −Σ `quantity` where `is_return = true`
-- Orders attributed to a product = Σ `order_fraction`
+- Orders attributed to a product or category = Σ `order_fraction` over non-return orders (fractional orders; sums exactly to Orders)
 
 ## 7. Silver models
 
@@ -198,8 +202,9 @@ Orchestrator: **Opus 5** (design, task split, prompt writing, review of every di
 | T2.6 | Generic + singular tests (§8) | Sonnet 5 | medium | T2.5 | — |
 | T2.7 | Model/column descriptions, README data dictionary | Haiku 4.5 | low | T2.6 | — |
 | T2.8 | Full `dbt build`, review lineage, PR description, readiness gate | Opus 5 | high | T2.7 | — |
-| T3.1 | KPI definitions + DAX measure list; Gold export/connection guide for Power BI | Opus 5 | medium | T2.8 | — |
-| T3.2 | Build dashboard in Power BI | Albert | — | T3.1 | — |
+| T3.1 | KPI definitions + DAX measure list; page and visual plan; Power BI model setup guidance | Opus 5 | medium | T2.8 | — |
+| T3.2 | Build 5-page dashboard in Power BI (Overview, Category & Items, Stores, Daily, Customers) | Albert | — | T3.1 | — |
+| T3.3 | Dashboard user guide `docs/dashboard_guide.md`; README task map | Opus 5 | low | T3.2 | — |
 | T4.1 | Roll-out strategy draft `docs/rollout.md` | Opus 5 | medium | T2.8 | C |
 | T5.1 | AI usage write-up `docs/ai_usage.md` | Opus 5 | medium | all | — |
 

@@ -3,8 +3,29 @@
 Weekly POS CSVs → dbt on DuckDB (Bronze / Silver / Gold) → Parquet for a Power BI store-manager dashboard.
 
 - Design decisions: [docs/project_plan.md](docs/project_plan.md)
-- Data model (conceptual, logical, star schema): [docs/erd.md](docs/erd.md)
-- Power BI dashboard user guide (pages, metric definitions): [docs/dashboard_guide.md](docs/dashboard_guide.md)
+
+## Case assignment tasks
+
+| Task | Deliverable | Where to find it |
+|---|---|---|
+| Task 1 — Data model blueprint | Conceptual, logical and physical (star schema) model as Mermaid ER, with PKs, FKs and DuckDB types | [docs/erd.md](docs/erd.md) |
+| Task 2 — Pipeline | dbt on DuckDB (Bronze / Silver / Gold), data tests, Parquet export, CI | [models/](models/), [tests/](tests/), [scripts/](scripts/), [.github/workflows/pipeline.yml](.github/workflows/pipeline.yml); how to run: [Run it](#run-it) below |
+| Task 3 — Dashboard | Multi-page Power BI Store Manager dashboard on the Gold tables | Report: [UPM Case Assignment_Report.pbix](UPM%20Case%20Assignment_Report.pbix); user guide and metric definitions: [docs/dashboard_guide.md](docs/dashboard_guide.md) |
+
+## AI workflow: blueprint, prompts and skills
+
+| What | Where |
+|---|---|
+| Overall plan, confirmed decisions, model-per-task orchestration | [docs/project_plan.md](docs/project_plan.md) (§1 deliverables, §3 decisions, §9 task list with model and effort per task) |
+| Task 1 implementation blueprint (step-by-step plan given to the implementing model) | [docs/superpowers/plans/task1-blueprint.md](docs/superpowers/plans/task1-blueprint.md) |
+| Task 2 implementation blueprint | [docs/superpowers/plans/task2-pipeline.md](docs/superpowers/plans/task2-pipeline.md) |
+| Standing prompt / rules for every model (working style, layering, validation, git) | [CLAUDE.md](CLAUDE.md) |
+| Per-task subagent prompts (`*-brief.md`), their reports (`*-report.md`), branch review and progress log | `.superpowers/sdd/` — local only, excluded by `.gitignore` |
+
+Skills used:
+
+- **Superpowers** (Claude Code plugin): the blueprints above are written for `subagent-driven-development` (or `executing-plans`), which executes them task by task with a review after each task (named in the header of each blueprint).
+- **Data-platform skills**, adapted into the rules in [CLAUDE.md](CLAUDE.md): `migrate-bi-sql-to-dbt` (contract-first models, logic in the lowest owning layer), `validate-dbt-report-migration` (layered validation: structure → totals → rows; see also project plan §8), `prepare-data-platform-pr` / `check-dataplatform-pr` (branch and PR conventions).
 
 ## Run it
 
