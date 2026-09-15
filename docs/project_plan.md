@@ -1,6 +1,6 @@
 # Project Plan — The Daily Grind POS Analytics Pipeline
 
-Status: Tasks 1–3 built (Task 1 merged; Tasks 2–3 in review). Task 4 roll-out and the AI usage note are not written yet.
+Status: Tasks 1–3 built (Task 1 merged; Tasks 2–3 in review). Task 4 roll-out drafted (`docs/rollout.md`); the AI usage note is not written yet.
 
 ## 1. Goal and deliverables
 
@@ -30,7 +30,7 @@ models/gold/             dim_* and fct_* tables (star schema)
 tests/                   singular dbt tests (reconciliation, business rules)
 tests_py/                pytest for the Python scripts
 .github/workflows/       CI: pre-process, pytest, dbt build, export
-docs/                    project_plan.md, erd.md, dashboard_guide.md; planned: rollout.md, ai_usage.md
+docs/                    project_plan.md, erd.md, dashboard_guide.md, rollout.md; planned: ai_usage.md
 UPM Case Assignment_Report.pbix   Power BI dashboard (Task 3)
 CLAUDE.md                harness rules for all models
 ```
