@@ -4,6 +4,7 @@ Weekly POS CSVs → dbt on DuckDB (Bronze / Silver / Gold) → Parquet for a Pow
 
 - Design decisions: [docs/project_plan.md](docs/project_plan.md)
 - Data model (conceptual, logical, star schema): [docs/erd.md](docs/erd.md)
+- Power BI dashboard user guide (pages, metric definitions): [docs/dashboard_guide.md](docs/dashboard_guide.md)
 
 ## Run it
 
