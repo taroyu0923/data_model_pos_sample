@@ -11,6 +11,7 @@ Weekly POS CSVs → dbt on DuckDB (Bronze / Silver / Gold) → Parquet for a Pow
 | Task 1 — Data model blueprint | Conceptual, logical and physical (star schema) model as Mermaid ER, with PKs, FKs and DuckDB types | [docs/erd.md](docs/erd.md) |
 | Task 2 — Pipeline | dbt on DuckDB (Bronze / Silver / Gold), data tests, Parquet export, CI | [models/](models/), [tests/](tests/), [scripts/](scripts/), [.github/workflows/pipeline.yml](.github/workflows/pipeline.yml); how to run: [Run it](#run-it) below |
 | Task 3 — Dashboard | Multi-page Power BI Store Manager dashboard on the Gold tables | Report: [UPM Case Assignment_Report.pbix](UPM%20Case%20Assignment_Report.pbix); user guide and metric definitions: [docs/dashboard_guide.md](docs/dashboard_guide.md) |
+| Task 4 — Roll-out | Change-management strategy for moving Store Managers from the static Excel PDF to the dashboard | [docs/rollout.md](docs/rollout.md) |
 
 ## AI workflow: blueprint, prompts and skills
 
@@ -160,7 +161,7 @@ flowchart LR
 | `tests/` | yes | Singular dbt tests: reconciliation and business rules (see [Tests](#tests)). | 8 `assert_*.sql` files |
 | `tests_py/` | yes | pytest for the Python scripts. | `test_preprocess.py`, `test_export_gold.py` |
 | `exports/` | no (generated) | Parquet files that Power BI loads. | one `.parquet` per Gold table |
-| `docs/` | yes | Project documentation. | `project_plan.md` (decisions, orchestration), `erd.md` (Task 1 data model), `dashboard_guide.md` (Task 3 user guide) |
+| `docs/` | yes | Project documentation. | `project_plan.md` (decisions, orchestration), `erd.md` (Task 1 data model), `dashboard_guide.md` (Task 3 user guide), `rollout.md` (Task 4 roll-out strategy) |
 | `docs/superpowers/plans/` | yes | Implementation blueprints given to the implementing models. | `task1-blueprint.md`, `task2-pipeline.md` |
 | `.github/workflows/` | yes | CI: pre-process, pytest, `dbt build`, export, upload Parquet artifact. | `pipeline.yml` |
 | `UPM Case Assignment_Report.pbix` | yes | Task 3 Power BI dashboard. | 5 pages |
