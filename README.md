@@ -145,3 +145,27 @@ flowchart LR
 - Generic: `unique` + `not_null` on every key, `relationships` on every foreign key, `accepted_values` on tier, contact type and customer type.
 - Singular (`tests/`): quantity and order count reconcile Gold to Bronze; net revenue reconciles Gold to Silver; `order_fraction` sums to 1 per order; member customers match the newest Silver record per email. Warnings: POS codes missing from the catalog, catalog descriptions that do not split, a sale and a return of the same item in one order.
 - Python (`tests_py/`): pre-processing repairs and export types.
+
+## Repository structure
+
+| Path | Tracked in git | Purpose | Contents |
+|---|---|---|---|
+| `raw/` | yes | Original vendor CSVs. **Read-only — never edit.** | `raw_catalog 2 1.csv`, `raw_customers 2 1.csv`, `raw_pos_system 2 1.csv` |
+| `scripts/` | yes | Python utilities around dbt. | `preprocess.py` (repair file structure: `raw/` → `seeds/`), `export_gold.py` (Gold tables → `exports/*.parquet`), `check_erd_columns.py` (checks the ER diagram in `docs/erd.md` against the planned schema) |
+| `seeds/` | no (generated) | Repaired CSVs written by `preprocess.py`; loaded by `dbt seed` with every column as `varchar`. | `raw_catalog.csv`, `raw_customers.csv`, `raw_pos_system.csv` |
+| `models/bronze/` | yes | `brz_*` views: seeds exposed as-is, no casting. | 3 models + `_bronze.yml` |
+| `models/silver/` | yes | `stg_*` views: trim/case, cast types, parse dates and JSON, split items, dedup customers. | `stg_catalog`, `stg_customers`, `stg_pos_orders`, `stg_pos_order_items` (each `.sql` + `.yml` with grain, key, null behaviour) |
+| `models/gold/` | yes | `dim_*` / `fct_*` tables: star schema used by the dashboard. | `dim_customer`, `dim_date`, `dim_item`, `dim_store`, `fct_order_items`, `fct_orders` (each `.sql` + `.yml`) |
+| `macros/` | yes | Reusable dbt SQL. | `generate_schema_name.sql` (schema = layer name, e.g. `silver`), `title_case.sql` (Title Case names and cities) |
+| `tests/` | yes | Singular dbt tests: reconciliation and business rules (see [Tests](#tests)). | 8 `assert_*.sql` files |
+| `tests_py/` | yes | pytest for the Python scripts. | `test_preprocess.py`, `test_export_gold.py` |
+| `exports/` | no (generated) | Parquet files that Power BI loads. | one `.parquet` per Gold table |
+| `docs/` | yes | Project documentation. | `project_plan.md` (decisions, orchestration), `erd.md` (Task 1 data model), `dashboard_guide.md` (Task 3 user guide) |
+| `docs/superpowers/plans/` | yes | Implementation blueprints given to the implementing models. | `task1-blueprint.md`, `task2-pipeline.md` |
+| `.github/workflows/` | yes | CI: pre-process, pytest, `dbt build`, export, upload Parquet artifact. | `pipeline.yml` |
+| `UPM Case Assignment_Report.pbix` | yes | Task 3 Power BI dashboard. | 5 pages |
+| `dbt_project.yml`, `profiles.yml` | yes | dbt project settings and DuckDB connection. | |
+| `requirements.txt` | yes | Pinned Python packages. | dbt-core, dbt-duckdb, duckdb, pytest |
+| `CLAUDE.md` | yes | Rules every AI model follows in this repo. | |
+| `.superpowers/sdd/` | no | Per-task subagent prompts, reports and review log (local only). | |
+| `daily_grind.duckdb`, `target/`, `logs/`, `.venv/` | no (generated) | DuckDB database, dbt build output and logs, Python virtual environment. | |
