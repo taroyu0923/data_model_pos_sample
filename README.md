@@ -48,15 +48,55 @@ CI (`.github/workflows/pipeline.yml`) runs the same steps on every push to `main
 
 ## Lineage
 
-```
-raw/*.csv --preprocess.py--> seeds/raw_*.csv --dbt seed--> raw.raw_*  -->  bronze.brz_*
+```mermaid
+flowchart LR
+    subgraph files["Files"]
+        raw_csv["raw/*.csv"]
+        seeds_csv["seeds/raw_*.csv"]
+    end
+    subgraph raw["raw (seeds, varchar)"]
+        raw_catalog
+        raw_customers
+        raw_pos_system
+    end
+    subgraph bronze["bronze (views)"]
+        brz_catalog
+        brz_customers
+        brz_pos_system
+    end
+    subgraph silver["silver (views)"]
+        stg_catalog
+        stg_customers
+        stg_pos_orders
+        stg_pos_order_items
+    end
+    subgraph gold["gold (tables)"]
+        dim_item
+        dim_customer
+        dim_store
+        dim_date
+        fct_order_items
+        fct_orders
+    end
+    subgraph bi["Power BI"]
+        parquet["exports/*.parquet"]
+        pbix["Dashboard .pbix"]
+    end
 
-bronze.brz_catalog     -> silver.stg_catalog      -> gold.dim_item
-bronze.brz_customers   -> silver.stg_customers    -> gold.dim_customer  (+ stg_pos_orders for inferred customers)
-bronze.brz_pos_system  -> silver.stg_pos_orders   -> gold.dim_store, gold.dim_date
-bronze.brz_pos_system  -> silver.stg_pos_order_items
+    raw_csv -- "preprocess.py" --> seeds_csv
+    seeds_csv -- "dbt seed" --> raw_catalog & raw_customers & raw_pos_system
 
-stg_pos_order_items + stg_pos_orders + dim_item -> gold.fct_order_items -> gold.fct_orders
+    raw_catalog --> brz_catalog --> stg_catalog --> dim_item
+    raw_customers --> brz_customers --> stg_customers --> dim_customer
+    raw_pos_system --> brz_pos_system
+    brz_pos_system --> stg_pos_orders & stg_pos_order_items
+
+    stg_pos_orders -- "inferred customers" --> dim_customer
+    stg_pos_orders --> dim_store & dim_date
+    stg_pos_order_items & stg_pos_orders & dim_item --> fct_order_items
+    fct_order_items --> fct_orders
+
+    gold -- "export_gold.py" --> parquet --> pbix
 ```
 
 ## Layers
